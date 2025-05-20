@@ -1,0 +1,40 @@
+services:
+  php:
+    build: ./docker/php
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    command: php -S 0.0.0.0:8080 -t public
+    ports:
+      - "8080:8080"
+
+  swoole:
+    build: ./docker/swoole-server
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    command: php swoole-server.php
+    ports:
+      - "9501:9501"
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: app_db
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    ports:
+      - "8081:80"
+
+volumes:
+  mysql-data:
