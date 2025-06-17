@@ -27,15 +27,36 @@ class UserController extends BaseController
         if (!is_array($input)) {
             return $this->json($response, ['error' => 'Invalid or missing JSON body'], 400);
         }
-        $user = $this->service->create($input);
-        return $this->json($response, $user, 201);
+
+        // Validate required fields
+        if (empty($input['name']) || empty($input['email'])) {
+            return $this->json($response, [
+                'error' => 'Name and email are required fields'
+            ], 400);
+        }
+
+        // Validate email format
+        if (!filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
+            return $this->json($response, [
+                'error' => 'Invalid email format'
+            ], 400);
+        }
+
+        try {
+            $user = $this->service->create($input);
+            return $this->json($response, $user, 201);
+        } catch (\Exception $e) {
+            return $this->json($response, [
+                'error' => 'Failed to create user: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show(Request $request, Response $response, $args): Response
     {
         $user = $this->service->get($args['id']);
         if (!$user) {
-            return $response->withStatus(404);
+            return $this->json($response, ['error' => 'User not found'], 404);
         }
         return $this->json($response, $user);
     }
@@ -43,16 +64,42 @@ class UserController extends BaseController
     public function update(Request $request, Response $response, $args): Response
     {
         $input = $request->getParsedBody();
-        $user = $this->service->update($args['id'], $input);
-        if (!$user) {
-            return $response->withStatus(404);
+        if (!is_array($input)) {
+            return $this->json($response, ['error' => 'Invalid or missing JSON body'], 400);
         }
-        return $this->json($response, $user);
+
+        // Validate email format if provided
+        if (isset($input['email']) && !filter_var($input['email'], FILTER_VALIDATE_EMAIL)) {
+            return $this->json($response, [
+                'error' => 'Invalid email format'
+            ], 400);
+        }
+
+        try {
+            $user = $this->service->update($args['id'], $input);
+            if (!$user) {
+                return $this->json($response, ['error' => 'User not found'], 404);
+            }
+            return $this->json($response, $user);
+        } catch (\Exception $e) {
+            return $this->json($response, [
+                'error' => 'Failed to update user: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy(Request $request, Response $response, $args): Response
     {
-        $deleted = $this->service->delete($args['id']);
-        return $response->withStatus($deleted ? 204 : 404);
+        try {
+            $deleted = $this->service->delete($args['id']);
+            if (!$deleted) {
+                return $this->json($response, ['error' => 'User not found'], 404);
+            }
+            return $response->withStatus(204);
+        } catch (\Exception $e) {
+            return $this->json($response, [
+                'error' => 'Failed to delete user: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

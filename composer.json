@@ -5,7 +5,8 @@
         "slim/psr7": "^1.0",
         "vlucas/phpdotenv": "^5.4",
         "illuminate/database": "^10.0",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-swoole": "*"
     },
     "autoload": {
         "psr-4": {

@@ -18,6 +18,9 @@ $app = AppFactory::create();
 // Add this line:
 $app->addBodyParsingMiddleware();
 
+// Add error handling middleware
+$app->addErrorMiddleware(true, true, true);
+
 // Eloquent setup
 $capsule = new Capsule;
 $dbDriver = strtolower($_ENV['DB_CONNECTION'] ?? 'sqlite');

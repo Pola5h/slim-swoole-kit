@@ -33,7 +33,11 @@ A modern, high-performance PHP API boilerplate combining the Slim Framework, Swo
    ```sh
    docker-compose up --build
    ```
-4. **Access the API:**
+4. **Setup the database (if using SQLite or need sample data):**
+   ```sh
+   php migrate.php
+   ```
+5. **Access the API:**
    - Slim (PHP built-in server): http://localhost:8080
    - Swoole server: http://localhost:9501
    - phpMyAdmin: http://localhost:8081 (user: root, password: secret)
@@ -77,6 +81,28 @@ A modern, high-performance PHP API boilerplate combining the Slim Framework, Swo
 
 - **SQLite**: Set `DB_CONNECTION=sqlite` and `SQLITE_PATH=database/database.sqlite` in `.env`.
 - **MySQL**: Set `DB_CONNECTION=mysql` and configure `DB_HOST`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `DB_PORT`.
+
+## Requirements
+
+- PHP 8.2+
+- Composer
+- Docker (optional but recommended)
+- **Swoole extension** (only required for Swoole server, not for regular PHP server)
+
+### Installing Swoole (Optional)
+
+To use the high-performance Swoole server, you need to install the Swoole extension:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install php-dev
+sudo pecl install swoole
+
+# Or using Docker (recommended)
+docker-compose up swoole
+```
+
+**Note**: If Swoole is not installed, you can still use the regular PHP built-in server which works perfectly for development.
 
 ## License
 

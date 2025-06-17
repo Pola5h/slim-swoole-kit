@@ -1,0 +1,5 @@
+nohup: ignoring input
+[Tue Jun 17 09:50:29 2025] PHP 8.4.8 Development Server (http://localhost:8080) started
+[Tue Jun 17 09:50:31 2025] 127.0.0.1:46978 Accepted
+[Tue Jun 17 09:50:31 2025] 127.0.0.1:46978 [200]: GET /users
+[Tue Jun 17 09:50:31 2025] 127.0.0.1:46978 Closing

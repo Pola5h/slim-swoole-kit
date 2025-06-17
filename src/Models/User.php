@@ -8,5 +8,5 @@ class User extends Model
 {
     protected $table = 'users';
     protected $fillable = ['name', 'email'];
-    public $timestamps = false;
+    public $timestamps = true; // Enable timestamps
 }
